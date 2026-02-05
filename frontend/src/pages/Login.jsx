@@ -1,10 +1,24 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Login({ onLoggedIn }) {
   const buttonDiv = useRef(null);
+  const [googleLoaded, setGoogleLoaded] = useState(!!window.google);
 
+  // Listen for the google-loaded event from index.html
   useEffect(() => {
-    if (!window.google || !buttonDiv.current) return;
+    if (window.google) {
+      setGoogleLoaded(true);
+      return;
+    }
+
+    const handleGoogleLoaded = () => setGoogleLoaded(true);
+    window.addEventListener("google-loaded", handleGoogleLoaded);
+    return () => window.removeEventListener("google-loaded", handleGoogleLoaded);
+  }, []);
+
+  // Initialize and render the Google button once the library is loaded
+  useEffect(() => {
+    if (!googleLoaded || !buttonDiv.current) return;
 
     window.google.accounts.id.initialize({
       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
@@ -27,7 +41,7 @@ export default function Login({ onLoggedIn }) {
       size: "large",
       text: "signin_with",
     });
-  }, [onLoggedIn]);
+  }, [googleLoaded, onLoggedIn]);
 
   return (
     <div style={{
