@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: cloud-task-tracker
+
+  profiles:
+    # Default to local when running on your machine
+    active: local
+
+server:
+  port: 8080
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%X{traceId:-}] %-5level %logger{36} - %msg%n"
+
+# Actuator (health endpoints)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+# Swagger/OpenAPI (springdoc)
+springdoc:
+  swagger-ui:
+    path: /docs
+  api-docs:
+    path: /api-docs
+
+app:
+  google:
+    client-id: ${GOOGLE_CLIENT_ID:}
+  jwt:
+    secret: ${JWT_SECRET:}
+    minutes: ${JWT_MINUTES:15}
+    cookie-name: tt_access
+    cookie-secure: ${JWT_COOKIE_SECURE:false}
+  security:
+    auth-rate-limit:
+      window-seconds: ${AUTH_RL_WINDOW_SECONDS:60}
+      max-requests: ${AUTH_RL_MAX_REQUESTS:6}

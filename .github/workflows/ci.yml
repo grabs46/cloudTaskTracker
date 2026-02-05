@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run tests
+        working-directory: backend
+        env:
+          JWT_SECRET: ci-test-secret-that-is-at-least-32-chars-long
+          GOOGLE_CLIENT_ID: fake-client-id-for-ci
+        run: mvn verify --batch-mode --no-transfer-progress

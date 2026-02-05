@@ -1,0 +1,11 @@
+services:
+  backend:
+    image: grabs46/tasktracker-api:latest
+    container_name: tasktracker-api
+    restart: unless-stopped
+    network_mode: host
+    env_file: .env.prod
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+
+

@@ -1,0 +1,6 @@
+*.private*.*
+/docs/*.private*.*
+.env.prod
+*.pem
+nul
+.vscode/
